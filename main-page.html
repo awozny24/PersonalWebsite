@@ -5,10 +5,59 @@
   <head>
     <title>Alexander Wozny Personal Website</title>
 
+    <style>
+
+      body,
+      .nav-arrow-left:after,
+      .nav-arrow-right:after {
+        background: lightblue;
+      }
+
+      .nav-arrow-left,
+      .nav-arrow-right {
+        background-color: black;
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: 50%;
+      }
+
+      .nav-arrow-left:after,
+      .nav-arrow-right:after {
+        content: '';
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        top: 10px;
+        left: 10px;
+      }
+
+      .nav-arrow-left {
+        transform: rotate(-45deg);
+        left: calc(30px);
+      }
+
+      .nav-arrow-right {
+        transform: rotate(135deg);
+        right: calc(30px);
+      }
+
+
+    </style>
+
   </head>
 
   <body>
-    
+    <div class="nav-arrow-left"></div> 
+    <div class="nav-arrow-right"></div> 
+    <svg width="60px" height="60px">
+      <path></path>
+    </svg>
+
+    <script>
+      
+    </script>
+
 
   </body>
 
