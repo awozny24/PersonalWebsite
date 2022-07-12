@@ -77,18 +77,22 @@
 
       .panel:nth-child(1) {
         background: gray;
+        z-index: 2;
       }
 
       .panel:nth-child(2) {
         background: tomato;
+        z-index: 1;
       }
 
       .panel:nth-child(3) {
         background: yellowgreen;
+        z-index: 1;
       }
 
-      .panel:nth-child(1) {
+      .panel:nth-child(4) {
         background: blueviolet;
+        z-index: 1;
       }
 
 
@@ -98,10 +102,10 @@
 
   <body>
     <div class="panels">
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
-      <div class="panel"></div>
+      <div id="panel-1" class="panel"></div>
+      <div id="panel-2" class="panel"></div>
+      <div id="panel-3" class="panel"></div>
+      <div id="panel-4" class="panel"></div>
     </div>
     <div class="container">
       <div class="arrows">
@@ -124,12 +128,13 @@
     
 
     <script>
-      let colorTracker = 0;
+      let colorTracker = 1;
       const colors = ['black', 'gray', 'tomato', 'yellowgreen', 'blueviolet', 'black'];
 
-
       function initialize(){
-        document.body.style.background = colors[1]
+        // initialize panel for background color
+        const currBackground = document.getElementById("panel-1");
+        currBackground.style.zIndex = '2';
       }
 
       initialize();
@@ -158,12 +163,21 @@
       }
 
       function leftArrowClick(){
+        // only change the page if it is within the bounds
         if (colorTracker > 1){
+
+          // change z-index of current panel to send it back
+          const curr_panel_id = "panel-" + colorTracker.toString();
+          const currBackground = document.getElementById(curr_panel_id)
+          currBackground.style.zIndex = '1';
+
           // decrement color
           colorTracker = colorTracker - 1;
 
-          // change color of background
-          document.body.style.background = colors[colorTracker]
+          // change the z-index of the new panel to send it back
+          const new_panel_id = "panel-" + colorTracker.toString();
+          const newBackground = document.getElementById(new_panel_id)
+          newBackground.style.zIndex = '2'
 
           // change color of arrow
           const arrow = document.getElementById('nav arrow left');
@@ -173,12 +187,22 @@
       }
 
       function rightArrowClick(){
+        // only change the page if it is within the bounds
         if (colorTracker < colors.length-2){
-          // increment color
-          colorTracker = colorTracker + 1;
 
           // change color of background
-          document.body.style.background = colors[colorTracker]
+          // change z-index of current panel to send it back
+          const curr_panel_id = "panel-" + colorTracker.toString();
+          const currBackground = document.getElementById(curr_panel_id)
+          currBackground.style.zIndex = '1';
+
+          // decrement color
+          colorTracker = colorTracker + 1;
+
+          // change the z-index of the new panel to send it back
+          const new_panel_id = "panel-" + colorTracker.toString();
+          const newBackground = document.getElementById(new_panel_id)
+          newBackground.style.zIndex = '2';
 
           // change color of arrow
           const arrow = document.getElementById('nav arrow right');
