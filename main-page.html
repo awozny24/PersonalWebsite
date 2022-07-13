@@ -34,7 +34,7 @@
         position: absolute;
         bottom: 30px;
         left: 50%;
-        transform: translateX(-50%)
+        transform: translateX(-50%);
         z-index: 9;
       }
 
@@ -52,20 +52,26 @@
 
       ul.navigation li:not(.selected):hover:before {
         transform: scale(1.4);
-      }
+      } 
 
-      ul.navigation li:before {
+      ul.navigation li:before{
         transition: transform 0.3s;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
         content: '';
-        width: 10px;
-        height: 10px;
+        width: 8px;
+        height: 8px;
         background: rgb(244, 244, 244);
         position: absolute;
         top: 0;
         left: 0;
         border-radius: 10px;
+      } 
+
+      ul.navigation li:nth-child(1):before{
+        left: 4px;
+        bottom: 4.2px;
       }
+        
 
       .panel {
         width: 100vw;
@@ -109,25 +115,28 @@
     </div>
     <div class="container">
       <div class="arrows">
-        <svg id='nav arrow left' class="arrow left" width="60px" height="60px" onclick="leftArrowClick()" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
+        <svg id='nav arrow left' class="arrow left" width="60px" height="60px" onclick="leftArrowClick(-1)" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
           <path d="M 50 0 L 30 0 L 0 30 L 30 60 L 50 60 L 20 30 L 50 0"></path>
         </svg>
 
-        <svg id='nav arrow right' class="arrow right" width="60px" height="60px" onclick="rightArrowClick()" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
+        <svg id='nav arrow right' class="arrow right" width="60px" height="60px" onclick="rightArrowClick(1)" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
           <path d="M 10 0 L 30 0 L 60 30 L 30 60 L 10 60 L 40 30 L 10 0"></path>
         </svg>
       </div>
     </div>
 
     <ul class="navigation">
-      <li></li>
-      <li class="selected"></li>
-      <li></li>
-      <li></li>
+      <li id="selected-1" class="selected" onclick="ChangePage(page)"></li>
+      <li id="selected-2" class="selected"></li>
+      <li id="selected-3" class="selected"></li>
+      <li id="selected-4" class="selected"></li>
     </ul>
     
 
     <script>
+
+      let known;
+
       let colorTracker = 1;
       const colors = ['black', 'gray', 'tomato', 'yellowgreen', 'blueviolet', 'black'];
 
@@ -135,81 +144,103 @@
         // initialize panel for background color
         const currBackground = document.getElementById("panel-1");
         currBackground.style.zIndex = '2';
+
+        // selected dot initialized to first page
+        const selectorDot = document.getElementById("selected-1")
+        selectorDot.style.transform = 'scale(1.9)';
+        selectorDot.style.bottom = '4.2px';
+        selectorDot.style.left = '4px';
       }
 
       initialize();
 
+      function ChangePage(page, dirMove="none"){
+        
+        // change z-index of current panel to send it back
+        const curr_panel_id = "panel-" + colorTracker.toString();
+        const currBackground = document.getElementById(curr_panel_id)
+        currBackground.style.zIndex = '1';
+
+        // old selected dot decreased in size
+        const old_sel_dot = "selected-" + colorTracker.toString();
+        const oldSelectorDot = document.getElementById(old_sel_dot)
+        oldSelectorDot.style.transform = 'scale(1)';
+        oldSelectorDot.style.bottom = '0px';
+        oldSelectorDot.style.left = '0px';
+        oldSelectorDot.style.background = 'blue'; //rgb(244, 244, 244)
+
+        // set new current page
+        colorTracker = page;
+
+        // change the z-index of the new panel to send it back
+        const new_panel_id = "panel-" + colorTracker.toString();
+        const newBackground = document.getElementById(new_panel_id)
+        newBackground.style.zIndex = '2'
+
+        // change color of arrow
+        if (dirMove === "left"){
+          const arrow = document.getElementById('nav arrow left');
+          arrow.style.fill = colors[colorTracker-1];
+        }
+        else if (dirMove === "right") {
+          const arrow = document.getElementById('nav arrow right');
+          arrow.style.fill = colors[colorTracker+1];
+        }
+
+        // new selected dot increased in size
+        const new_sel_dot = "selected-" + colorTracker.toString();
+        const newSelectorDot = document.getElementById(new_sel_dot);
+        newSelectorDot.style.transform = 'scale(1.9)';
+        newSelectorDot.style.bottom = '4.2px';
+        newSelectorDot.style.left = '14px';
+        newSelectorDot.style.backgroud = 'white';
+
+      }
+
       function ArrowMouseOver(elementId){
+        // make the cursor have a pointer style and make the arrow larger
         const arrow = document.getElementById(elementId);
         arrow.style.cursor = 'pointer';
         arrow.style.transform = 'scale(0.7)';
 
+        // make the left arrow have the color of the left slide
         if (elementId.includes('left') && colorTracker > 1){
           arrow.style.fill = colors[colorTracker-1];
         }
+        // make the right arrow have the color of the right slide
         else if (elementId.includes('right') && colorTracker < colors.length-2) {
           arrow.style.fill = colors[colorTracker+1];
         }
+        // otherwise, make either arrow black
         else {
           arrow.style.fill = 'black';
         }
       }
 
       function ArrowMouseOut(elementId){
+        // reset the arrow back to normal
         const arrow = document.getElementById(elementId);
         arrow.style.cursor = 'default';
         arrow.style.transform = 'scale(0.6)';
         arrow.style.fill = 'black';
       }
 
-      function leftArrowClick(){
+      function leftArrowClick(dirToMove){
         // only change the page if it is within the bounds
         if (colorTracker > 1){
-
-          // change z-index of current panel to send it back
-          const curr_panel_id = "panel-" + colorTracker.toString();
-          const currBackground = document.getElementById(curr_panel_id)
-          currBackground.style.zIndex = '1';
-
-          // decrement color
-          colorTracker = colorTracker - 1;
-
-          // change the z-index of the new panel to send it back
-          const new_panel_id = "panel-" + colorTracker.toString();
-          const newBackground = document.getElementById(new_panel_id)
-          newBackground.style.zIndex = '2'
-
-          // change color of arrow
-          const arrow = document.getElementById('nav arrow left');
-          arrow.style.fill = colors[colorTracker-1];
+          const new_page = colorTracker + dirToMove;
+          ChangePage(new_page, "left");
         }
         
       }
 
-      function rightArrowClick(){
+      function rightArrowClick(dirToMove){
         // only change the page if it is within the bounds
         if (colorTracker < colors.length-2){
-
-          // change color of background
-          // change z-index of current panel to send it back
-          const curr_panel_id = "panel-" + colorTracker.toString();
-          const currBackground = document.getElementById(curr_panel_id)
-          currBackground.style.zIndex = '1';
-
-          // decrement color
-          colorTracker = colorTracker + 1;
-
-          // change the z-index of the new panel to send it back
-          const new_panel_id = "panel-" + colorTracker.toString();
-          const newBackground = document.getElementById(new_panel_id)
-          newBackground.style.zIndex = '2';
-
-          // change color of arrow
-          const arrow = document.getElementById('nav arrow right');
-          arrow.style.fill = colors[colorTracker+1];
+          const new_page = colorTracker + dirToMove;
+          ChangePage(new_page, "right");
         }
       }
-
 
 
     </script>
