@@ -126,10 +126,10 @@
     </div>
 
     <ul class="navigation">
-      <li id="selected-1" class="selected" onclick="ChangePage(page)"></li>
-      <li id="selected-2" class="selected"></li>
-      <li id="selected-3" class="selected"></li>
-      <li id="selected-4" class="selected"></li>
+      <li id="selected-1" class="selected" onclick="ChangePage(1)"></li>
+      <li id="selected-2" class="selected" onclick="ChangePage(2)"></li>
+      <li id="selected-3" class="selected" onclick="ChangePage(3)"></li>
+      <li id="selected-4" class="selected" onclick="ChangePage(4)"></li>
     </ul>
     
 
@@ -231,7 +231,6 @@
           const new_page = colorTracker + dirToMove;
           ChangePage(new_page, "left");
         }
-        
       }
 
       function rightArrowClick(dirToMove){
