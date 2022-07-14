@@ -7,9 +7,19 @@
 
     <style>
 
-      .container { 
+      .top-block {
+        display: flex;
+        position: relative;
+        height: 600px;
         width: 100vw;
-        height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      .container { 
+        width: 100%;
+        height: 100%;
+        position: absolute;
       }
 
       .arrow {
@@ -74,32 +84,30 @@
         
 
       .panel {
-        width: 100vw;
-        height: 100vh;
+        width: 100%;
+        height: 100%;
         position: absolute;
         top: 0;
         left: 0;
       }
 
       .panel:nth-child(1) {
-        background: gray;
         z-index: 2;
       }
 
       .panel:nth-child(2) {
-        background: tomato;
         z-index: 1;
       }
 
       .panel:nth-child(3) {
-        background: yellowgreen;
         z-index: 1;
       }
 
       .panel:nth-child(4) {
-        background: blueviolet;
         z-index: 1;
       }
+
+
 
 
     </style>
@@ -107,30 +115,32 @@
   </head>
 
   <body>
-    <div class="panels">
-      <div id="panel-1" class="panel"></div>
-      <div id="panel-2" class="panel"></div>
-      <div id="panel-3" class="panel"></div>
-      <div id="panel-4" class="panel"></div>
-    </div>
-    <div class="container">
-      <div class="arrows">
-        <svg id='nav arrow left' class="arrow left" width="60px" height="60px" onclick="leftArrowClick(-1)" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
-          <path d="M 50 0 L 30 0 L 0 30 L 30 60 L 50 60 L 20 30 L 50 0"></path>
-        </svg>
-
-        <svg id='nav arrow right' class="arrow right" width="60px" height="60px" onclick="rightArrowClick(1)" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
-          <path d="M 10 0 L 30 0 L 60 30 L 30 60 L 10 60 L 40 30 L 10 0"></path>
-        </svg>
+    <div class="top-block">
+      <div class="panels">
+        <div id="panel-1" class="panel"></div>
+        <div id="panel-2" class="panel"></div>
+        <div id="panel-3" class="panel"></div>
+        <div id="panel-4" class="panel"></div>
       </div>
-    </div>
+      <div class="container">
+        <div class="arrows">
+          <svg id='nav arrow left' class="arrow left" width="60px" height="60px" onclick="leftArrowClick(-1)" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
+            <path d="M 50 0 L 30 0 L 0 30 L 30 60 L 50 60 L 20 30 L 50 0"></path>
+          </svg>
 
-    <ul class="navigation">
-      <li id="selected-1" class="selected" onclick="ChangePage(1)"></li>
-      <li id="selected-2" class="selected" onclick="ChangePage(2)"></li>
-      <li id="selected-3" class="selected" onclick="ChangePage(3)"></li>
-      <li id="selected-4" class="selected" onclick="ChangePage(4)"></li>
-    </ul>
+          <svg id='nav arrow right' class="arrow right" width="60px" height="60px" onclick="rightArrowClick(1)" onmouseover="ArrowMouseOver(this.id)" onmouseout="ArrowMouseOut(this.id)">
+            <path d="M 10 0 L 30 0 L 60 30 L 30 60 L 10 60 L 40 30 L 10 0"></path>
+          </svg>
+        </div>
+      </div>
+
+      <ul class="navigation">
+        <li id="selected-1" class="selected" onclick="ChangePage(1)"></li>
+        <li id="selected-2" class="selected" onclick="ChangePage(2)"></li>
+        <li id="selected-3" class="selected" onclick="ChangePage(3)"></li>
+        <li id="selected-4" class="selected" onclick="ChangePage(4)"></li>
+      </ul>
+    </div>
     
 
     <script>
@@ -138,18 +148,20 @@
       let known;
 
       let colorTracker = 1;
-      const colors = ['black', 'gray', 'tomato', 'yellowgreen', 'blueviolet', 'black'];
+      const colors = ['black', 'lightblue', 'tomato', 'yellowgreen', 'blueviolet', 'black'];
+      let colorsChange = [true, false, false, false, false, true];
 
       function initialize(){
         // initialize panel for background color
         const currBackground = document.getElementById("panel-1");
         currBackground.style.zIndex = '2';
+        currBackground.style.background = colors[1];
 
         // selected dot initialized to first page
         const selectorDot = document.getElementById("selected-1")
         selectorDot.style.transform = 'scale(1.9)';
         selectorDot.style.bottom = '4.2px';
-        selectorDot.style.left = '4px';
+        selectorDot.style.left = '8px';
       }
 
       initialize();
@@ -167,15 +179,18 @@
         oldSelectorDot.style.transform = 'scale(1)';
         oldSelectorDot.style.bottom = '0px';
         oldSelectorDot.style.left = '0px';
-        oldSelectorDot.style.background = 'blue'; //rgb(244, 244, 244)
 
         // set new current page
         colorTracker = page;
 
         // change the z-index of the new panel to send it back
         const new_panel_id = "panel-" + colorTracker.toString();
-        const newBackground = document.getElementById(new_panel_id)
-        newBackground.style.zIndex = '2'
+        const newBackground = document.getElementById(new_panel_id);
+        newBackground.style.zIndex = '2';
+        if (~colorsChange[colorTracker]){
+          newBackground.style.background = colors[colorTracker];
+          colorsChange[colorTracker] = true;
+        }
 
         // change color of arrow
         if (dirMove === "left"){
@@ -192,7 +207,7 @@
         const newSelectorDot = document.getElementById(new_sel_dot);
         newSelectorDot.style.transform = 'scale(1.9)';
         newSelectorDot.style.bottom = '4.2px';
-        newSelectorDot.style.left = '14px';
+        newSelectorDot.style.left = '12px';
         newSelectorDot.style.backgroud = 'white';
 
       }
