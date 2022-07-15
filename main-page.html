@@ -178,16 +178,17 @@
 
       initialize();
 
-      panelSpeed = 5000;
+      // set panel changing speed in milliseconds
+      panelSpeed = 3000;
 
+      // automatically change panel by moving right
       id = setInterval(rightArrowClick, panelSpeed);
 
 
       function ChangePage(page, fromClick="none"){
 
-        console.log(page);
-
-        if (fromClick === "none") {
+        // if a manual page change was done by user, clear automatic interval to be started over
+        if (fromClick !== "none") {
           clearInterval(id);
         }
         
@@ -235,7 +236,9 @@
         newSelectorDot.style.left = '12px';
         newSelectorDot.style.backgroud = 'white';
 
-        if (fromClick === "none"){
+
+        // if page change was done by user, restart automatic panel changing
+        if (fromClick !== "none"){
           id = setInterval(rightArrowClick, panelSpeed);
         }
 
